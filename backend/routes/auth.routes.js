@@ -3,17 +3,17 @@ const router  = express.Router()
 
 
 router.get('/signup',(req,res)=>{
-    console.log("signup");
+    res.send("signup")
     
 })
 
 router.get('/login',(req,res)=>{
-    console.log("login");
+    res.send("signup")
     
 })
 
 router.get('/logout',(req,res)=>{
-    console.log("logout");
+   res.send("signup")
     
 })
 
