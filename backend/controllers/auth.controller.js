@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
   try {
-    //using bcryptjs to hash the password
+
   if(!fullName || !email){
  return res
         .status(400)
