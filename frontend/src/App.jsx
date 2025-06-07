@@ -1,8 +1,9 @@
 
-const App = () => {
+
+const app = () => {
   return (
-    <div className='hello'>byeee</div>
+    <div className="text-red-700">app</div>
   )
 }
 
-export default App
+export default app
