@@ -6,45 +6,44 @@ import cloudinary from "../lib/cloudinary.js";
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
   try {
-
-  if(!fullName || !email){
- return res
-        .status(400)
-        .json({ message: "credintials cnat be empty " });
-  }
+    if (!fullName || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
     if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "password should atleast be 6 charecters" });
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
+
     const user = await User.findOne({ email });
-    if (user) return res.status(400).json({ message: "email already exists" });
+
+    if (user) return res.status(400).json({ message: "Email already exists" });
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
-      fullName: fullName,
-      email: email,
+      fullName,
+      email,
       password: hashedPassword,
     });
-    if (newUser) {
-        generateToken(newUser._id,res)
-        await newUser.save();
-        res.status(201).json({
-          _id:newUser._id,
-          fullName:newUser.fullName,
-          email:newUser.email,
-          profilePic:newUser.profilePic,
 
-        })
+    if (newUser) {
+      // generate jwt token here
+      generateToken(newUser._id, res);
+      await newUser.save();
+
+      res.status(201).json({
+        _id: newUser._id,
+        fullName: newUser.fullName,
+        email: newUser.email,
+        profilePic: newUser.profilePic,
+      });
     } else {
-      res.status(400).json({ message: "invalid user data" });
+      res.status(400).json({ message: "Invalid user data" });
     }
   } catch (error) {
-    console.log("error in signup controller",error.message);
-    res.status(500).json({ message: "internal server error" });
-
+    console.log("Error in signup controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -109,12 +108,11 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-
-export const checkAuth = (req,res)=>{
+export const checkAuth = (req, res) => {
   try {
     res.status(200).json(req.user);
   } catch (error) {
-    console.log("error in check auth controller",error.message)
-    res.status(500).json({message:"internal error"})
+    console.log("Error in checkAuth controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
